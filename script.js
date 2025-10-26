@@ -4,19 +4,46 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('✅ App script loaded');
 
-// ====== NAVIGATION HANDLER ======
-const navLinks = document.querySelectorAll('.nav-link');
-const sections = document.querySelectorAll('.page-section');
+  // ====== NAVIGATION HANDLER ======
+  const navLinks = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('.page-section');
 
-navLinks.forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
+  // fungsi untuk menyembunyikan semua section
+  function hideAllSections() {
+    sections.forEach(sec => sec.classList.add('hidden'));
+  }
 
-    const target = link.getAttribute('data-page');
-sections.forEach(sec => sec.classList.add('hidden'));
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
 
-// Sembunyikan login screen secara default
-document.getElementById('login-screen').classList.add('hidden');
+      const target = link.getAttribute('data-page');
+      hideAllSections();
+
+      // tampilkan section target
+      const targetSection = document.getElementById(target);
+      if (targetSection) {
+        targetSection.classList.remove('hidden');
+      } else {
+        console.warn('⚠️ Section tidak ditemukan:', target);
+      }
+
+      // ubah warna link aktif
+      navLinks.forEach(l => l.classList.remove('text-blue-600', 'font-bold'));
+      link.classList.add('text-blue-600', 'font-bold');
+
+      // khusus jika bukan halaman login, sembunyikan form login (app tetap hidden)
+      const app = document.getElementById('app');
+      if (target !== 'login') {
+        app.classList.add('hidden');
+      }
+    });
+  });
+
+  // tampilkan Home secara default
+  hideAllSections();
+  document.getElementById('home').classList.remove('hidden');
+
 
 // Tampilkan halaman target
 if (target === 'login') {
