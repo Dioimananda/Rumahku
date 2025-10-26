@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Property Marketplace - Optimized</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    #filter-section, #add-section, #chat-section, #request-section {
+      transition: all 0.25s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<!-- 🌐 Navigation Bar -->
+<nav class="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md shadow-sm flex justify-between items-center px-8 py-4 z-50">
+  <div class="flex items-center gap-2">
+    <img src="Logo Astafera.png" alt="Logo" class="w-8 h-8 rounded">
+    <span class="font-bold text-lg text-gray-800">Rumahku</span>
+  </div>
+  <div class="flex gap-6 items-center">
+    <a href="#" data-page="home" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Home</a>
+    <a href="#" data-page="about" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">About</a>
+    <a href="#" data-page="services" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Services</a>
+    <a href="#" data-page="contact" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Contact</a>
+    <!-- ✅ diperbaiki: target ke "login-screen" agar sesuai JS -->
+    <a href="#" data-page="login-screen" class="nav-link border border-blue-500 text-blue-500 px-3 py-1 rounded hover:bg-blue-500 hover:text-white transition">
+      Login / Daftar
+    </a>
+  </div>
+</nav>
+
+<!-- 🌈 Page Sections -->
+<div id="pages" class="pt-24">
+
+  <!-- Home -->
+  <section id="home" class="page-section h-screen flex flex-col items-center justify-center text-center bg-gradient-to-br from-blue-100 to-blue-200">
+    <h1 class="text-5xl font-bold mb-4">Selamat Datang di <span class="text-blue-600">Rumahku</span></h1>
+    <p class="text-gray-700 text-lg max-w-xl">Temukan properti impian Anda dengan mudah dan cepat hanya di satu tempat.</p>
+  </section>
+
+  <!-- Tentang -->
+  <section id="about" class="page-section hidden h-screen flex flex-col items-center justify-center text-center bg-gradient-to-br from-blue-100 to-blue-200">
+    <h2 class="text-4xl font-bold mb-4">Tentang Kami</h2>
+    <p class="text-gray-700 max-w-2xl mx-auto">Rumahku adalah platform marketplace properti yang menghubungkan pembeli, penjual, dan agen dengan mudah dan transparan.</p>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="page-section hidden h-screen flex flex-col items-center justify-center text-center bg-gradient-to-br from-blue-100 to-blue-200">
+    <h2 class="text-4xl font-bold mb-4">Layanan Kami</h2>
+    <ul class="max-w-md text-left text-gray-700 space-y-2">
+      <li>🏠 Jual & Beli Properti</li>
+      <li>🏠 Sewa Properti</li>
+      <li>🔍 Konsultasi Properti Gratis</li>
+      <li>📈 Riset Harga dan Lokasi</li>
+      <li>🤝 Dukungan Customer Service 24/7</li>
+    </ul>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="page-section hidden h-screen flex flex-col items-center justify-center text-center bg-gradient-to-br from-blue-100 to-blue-200">
+    <h2 class="text-4xl font-bold mb-4">Hubungi Kami</h2>
+    <p class="text-gray-700 text-lg">📧 Email: Astafera@office.co.id | 📞 Telp: 0801-2345-6789</p>
+  </section>
+
+  <!-- ✅ LOGIN SCREEN (id diperbaiki agar cocok dengan JS) -->
+  <section id="login-screen" class="page-section hidden h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300">
+    <div class="bg-white/80 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-96 border border-white/50">
+      <h2 id="form-title" class="text-2xl font-bold mb-4 text-center transition-all duration-500 opacity-100">Masuk</h2>
+
+      <!-- LOGIN FORM -->
+      <form id="login-form" class="transition-all duration-500 opacity-100">
+        <label class="block mb-2 text-sm font-semibold">Username</label>
+        <input type="text" id="username" placeholder="Masukkan username" class="w-full border p-2 mb-3 rounded" required />
+        <label class="block mb-2 text-sm font-semibold">Password</label>
+        <input type="password" id="password" placeholder="Masukkan password" class="w-full border p-2 mb-4 rounded" required />
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Masuk</button>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form id="register-form" class="hidden transition-all duration-500">
+        <label class="block mb-2 text-sm font-semibold">Username Baru</label>
+        <input type="text" id="reg-username" placeholder="Buat username" class="w-full border p-2 mb-3 rounded" required />
+        <label class="block mb-2 text-sm font-semibold">Password Baru</label>
+        <input type="password" id="reg-password" placeholder="Buat password" class="w-full border p-2 mb-4 rounded" required />
+        <button type="submit" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">Daftar</button>
+      </form>
+
+      <p class="text-sm text-center mt-3 text-gray-700">
+        <span id="toggle-form" class="text-blue-600 hover:underline cursor-pointer">Belum punya akun? Daftar</span>
+      </p>
+    </div>
+  </section>
+</div>
+
+<!-- APP SECTION (setelah login) -->
+<div id="app" class="hidden p-6 max-w-6xl mx-auto">
+  <header class="flex items-center justify-between mb-6">
+    <h1 class="flex items-center text-3xl font-bold gap-2">
+      <img src="Logo Astafera.png" alt="Logo Rumahku" class="w-8 h-8 rounded" />
+      Rumahku
+    </h1>
+    <div class="flex items-center gap-3">
+      <button id="filter-toggle" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">🔍 Filter</button>
+      <button id="add-toggle" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">➕ Tambah</button>
+      <button id="request-toggle" class="hidden bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-700">
+        📨 Permintaan Upgrade
+      </button>
+      <button id="chat-toggle" class="relative bg-purple-500 text-white px-3 py-1 rounded hover:bg-purple-600">
+        💬 Pesan CS
+        <span id="chat-notif" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full px-1 hidden">0</span>
+      </button>
+      <button id="upgrade-btn" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 hidden">🔼 Upgrade Akun</button>
+      <span id="user-info" class="text-gray-700"></span>
+      <button id="logout-btn" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Logout</button>
+    </div>
+  </header>
+
+  <!-- Filter Section -->
+  <div id="filter-section" class="hidden bg-white p-4 rounded-2xl shadow-md mb-6">
+    <h2 class="text-lg font-semibold mb-2">Filter Properti</h2>
+    <div class="flex flex-wrap gap-3 justify-between">
+      <input type="text" id="search" placeholder="Cari properti..." class="border p-2 rounded w-40" />
+      <input type="text" id="location" placeholder="Lokasi" class="border p-2 rounded w-40" />
+      <select id="type" class="border p-2 rounded w-40">
+        <option value="">Semua Tipe</option>
+        <option value="Rumah">Rumah</option>
+        <option value="Apartemen">Apartemen</option>
+        <option value="Tanah">Tanah</option>
+      </select>
+      <input type="number" id="minPrice" placeholder="Harga Min" class="border p-2 rounded w-32" />
+      <input type="number" id="maxPrice" placeholder="Harga Maks" class="border p-2 rounded w-32" />
+      <button id="filter-btn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Terapkan</button>
+    </div>
+  </div>
+
+  <!-- Add Property Section -->
+  <div id="add-section" class="hidden bg-white p-4 rounded-2xl shadow-md mb-6">
+    <h2 class="text-lg font-semibold mb-3">Tambah Properti Baru</h2>
+    <form id="add-property-form" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <input type="text" id="newTitle" placeholder="Judul Properti" class="border p-2 rounded" required />
+      <input type="text" id="newLocation" placeholder="Lokasi" class="border p-2 rounded" required />
+      <input type="number" id="newPrice" placeholder="Harga (Rp)" class="border p-2 rounded" required />
+      <select id="newType" class="border p-2 rounded" required>
+        <option value="">Pilih Tipe</option>
+        <option value="Rumah">Rumah</option>
+        <option value="Apartemen">Apartemen</option>
+        <option value="Tanah">Tanah</option>
+      </select>
+      <input type="text" id="newImage" placeholder="URL Gambar" class="border p-2 rounded" required />
+      <button type="submit" class="bg-green-500 text-white py-2 rounded hover:bg-green-600 md:col-span-2">Tambah Properti</button>
+    </form>
+  </div>
+
+  <!-- Admin Panel: Verifikasi Upgrade Akun -->
+  <div id="request-section" class="hidden bg-white p-4 rounded-2xl shadow-md mb-6">
+    <h2 class="text-lg font-semibold mb-3">🧾 Verifikasi Upgrade Akun</h2>
+    <div id="request-list" class="space-y-3"></div>
+  </div>
+
+  <!-- Chat Section (floating) -->
+  <div id="chat-section" class="hidden fixed bottom-4 right-4 bg-white w-80 shadow-lg rounded-2xl p-3 border border-gray-200">
+    <h2 class="font-semibold text-lg mb-2">💬 Customer Service</h2>
+    <div id="chat-box" class="border h-60 overflow-y-auto p-2 rounded mb-2 bg-gray-50"></div>
+    <form id="chat-form" class="flex gap-2">
+      <input type="text" id="chat-input" placeholder="Ketik pesan..." class="border p-2 rounded flex-grow" />
+      <button type="submit" class="bg-purple-500 text-white px-3 rounded hover:bg-purple-600">Kirim</button>
+    </form>
+  </div>
+
+  <!-- Property List -->
+  <div id="property-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
