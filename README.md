@@ -43,44 +43,6 @@ property-marketplace/
 └── README.md
 ```
 
----
-
-## ⚙️ Cara Menjalankan
-
-### 1. Jalankan secara lokal
-Cukup buka file `index.html` di browser.
-Namun agar `fetch('properties.json')` berfungsi dengan baik, disarankan menjalankan **server lokal**:
-
-```bash
-npx http-server .
-# atau
-npx live-server
-```
-
-Lalu buka `http://localhost:8080` atau port yang ditampilkan.
-
-### 2. Jalankan di GitHub Pages
-1. Push semua file ke repository GitHub (misal: `property-marketplace`).
-2. Buka tab **Settings → Pages**.
-3. Pada "Source", pilih `Branch: main` dan folder `/ (root)`.
-4. Klik **Save**.
-5. Tunggu 1-2 menit, lalu akses di:
-   ```
-   https://USERNAME.github.io/property-marketplace/
-   ```
-
----
-
-## 👨‍💻 Akun Default untuk Uji Coba
-
-| Role | Username | Password |
-|------|-----------|-----------|
-| Admin | Dio | 123 |
-| Customer | budi | 456 |
-| Penjual | sari | 789 |
-
----
-
 ## 📄 Lisensi
 Proyek ini bersifat open-source dan dapat dikembangkan kembali untuk keperluan pembelajaran.
 
