@@ -45,24 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('home').classList.remove('hidden');
 
 
-// Tampilkan halaman target
-if (target === 'login') {
-  document.getElementById('login-screen').classList.remove('hidden');
-} else {
-  document.getElementById(target).classList.remove('hidden');
-}
-
-
-    // highlight link aktif
-    navLinks.forEach(l => l.classList.remove('text-blue-600', 'font-bold'));
-    link.classList.add('text-blue-600', 'font-bold');
-  });
-});
-
-// tampilkan Home secara default
-document.getElementById('home').classList.remove('hidden');
-
-
 
   // Elements
   const loginScreen = document.getElementById('login-screen');
