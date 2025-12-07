@@ -13,20 +13,32 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-  <!-- 🌐 Navigation Bar -->
-  <nav class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md shadow-sm flex flex-wrap justify-between items-center px-4 sm:px-8 py-3 sm:py-4 z-50">
-    <div class="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start mb-2 sm:mb-0">
-      <img src="Logo Astafera.png" alt="Logo" class="w-8 h-8 rounded">
-      <span class="font-bold text-lg text-gray-800">Rumahku</span>
-    </div>
-    <div class="flex flex-wrap justify-center sm:justify-end gap-2 sm:gap-6 items-center text-sm sm:text-base w-full sm:w-auto">
-      <a href="#" data-page="home" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Home</a>
-      <a href="#" data-page="about" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">About</a>
-      <a href="#" data-page="services" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Services</a>
-      <a href="#" data-page="contact" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Contact</a>
-      <a href="#" data-page="login" class="nav-link border border-blue-500 text-blue-500 px-3 py-1 rounded hover:bg-blue-500 hover:text-white transition">Login / Register</a>
-    </div>
-  </nav>
+<!-- 🌐 Navigation Bar -->
+<nav id="navbar" class="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md shadow-sm flex justify-between items-center px-8 py-4 z-50">
+  <div class="flex items-center gap-2">
+    <img src="Logo Astafera.png" alt="Logo" class="w-8 h-8 rounded">
+    <span class="font-bold text-lg text-gray-800">Rumahku</span>
+  </div>
+
+  <div id="nav-links" class="flex gap-6 items-center">
+    <a href="#" data-page="home" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Home</a>
+    <a href="#" data-page="about" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">About</a>
+    <a href="#" data-page="services" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Services</a>
+    <a href="#" data-page="contact" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Contact</a>
+    <a href="#" data-page="login" id="login-link" class="nav-link border border-blue-500 text-blue-500 px-3 py-1 rounded hover:bg-blue-500 hover:text-white transition">Login / Register
+
+    </a>
+    <div id="user-menu" class="relative cursor-pointer select-none">
+  <span id="user-label"
+        class="text-blue-600 font-semibold transition-opacity duration-200">
+  </span>
+  <span id="logout-hover"
+        class="absolute left-0 top-0 text-red-500 font-semibold opacity-0 transition-opacity duration-200">
+    Logout
+  </span>
+  </div>
+</nav>
+
 
   <!-- 🌈 Page Sections -->
   <div id="pages" class="pt-28 sm:pt-24">
@@ -107,10 +119,15 @@
         <img src="Logo Astafera.png" alt="Logo Rumahku" class="w-8 h-8 rounded" />
         Rumahku
       </h1>
-
       <div class="flex flex-wrap gap-2 sm:gap-3 items-center justify-center sm:justify-end w-full sm:w-auto">
         <button id="filter-toggle" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm sm:text-base">🔍 Filter</button>
         <button id="add-toggle" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm sm:text-base">➕ Tambah</button>
+        <button id="verify-toggle"
+  class="bg-orange-500 text-white px-3 py-1 rounded hover:bg-orange-600 text-sm sm:text-base">
+  🔐 Verifikasi Akun
+</button>
+
+
         <button id="request-toggle" class="hidden bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-700 text-sm sm:text-base">
           📨 Permintaan Upgrade
         </button>
@@ -118,9 +135,12 @@
           💬 Pesan CS
           <span id="chat-notif" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full px-1 hidden">0</span>
         </button>
-        <button id="upgrade-btn" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 hidden text-sm sm:text-base">🔼 Upgrade Akun</button>
-        <span id="user-info" class="text-gray-700 text-sm sm:text-base"></span>
-        <button id="logout-btn" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm sm:text-base">Logout</button>
+       
+        <button id="upgradeVerify-toggle" class="bg-orange-500 text-white px-3 py-1 rounded hover:bg-orange-600 text-sm sm:text-base">
+  🆙 Upgrade + Verifikasi Akun
+</button>
+
+    
       </div>
     </header>
 
@@ -159,6 +179,26 @@
         <button type="submit" class="bg-green-500 text-white py-2 rounded hover:bg-green-600 sm:col-span-2">Tambah Properti</button>
       </form>
     </div>
+
+<!-- Verify Section -->
+<div id="verify-section" class="hidden bg-white p-4 rounded-2xl shadow-md mb-6">
+  <h2 class="text-lg font-semibold mb-3">🔐 Permintaan Verifikasi Akun</h2>
+
+  <p class="text-gray-700 text-sm mb-3">
+    Unggah bukti identitas Anda untuk proses verifikasi (KTP, SIM, atau dokumen lain).
+  </p>
+
+  <form id="verify-form" class="flex flex-col gap-3">
+    <input type="text" id="verify-fullname" placeholder="Nama Lengkap" class="border p-2 rounded" required />
+
+    <input type="file" id="verify-file" class="border p-2 rounded bg-white" accept="image/*,.pdf" required />
+
+    <button class="bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+      Kirim Permintaan Verifikasi
+    </button>
+  </form>
+</div>
+
 
     <!-- Request Section -->
     <div id="request-section" class="hidden bg-white p-4 rounded-2xl shadow-md mb-6">
