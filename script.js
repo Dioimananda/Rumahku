@@ -297,6 +297,38 @@ const requestList = document.getElementById("request-list");
 function renderVerifyRequests() {
   requestList.innerHTML = "";
 
+const verifyForm = document.getElementById("verify-form");
+const requestList = document.getElementById("request-list");
+
+let verifyRequests = JSON.parse(localStorage.getItem("verifyRequests") || "[]");
+
+verifyForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const fullname = document.getElementById("verify-fullname").value;
+  const file = document.getElementById("verify-file").files[0];
+
+  if (!file) return alert("Silakan unggah file.");
+
+  const reader = new FileReader();
+
+  reader.onload = function () {
+    verifyRequests.push({
+      fullname,
+      fileData: reader.result,
+      status: "pending"
+    });
+
+    localStorage.setItem("verifyRequests", JSON.stringify(verifyRequests));
+
+    alert("Permintaan verifikasi berhasil dikirim.");
+    verifyForm.reset();
+  };
+
+  reader.readAsDataURL(file);
+});
+
+
   verifyRequests.forEach((req, i) => {
     const div = document.createElement("div");
     div.className = "border p-3 rounded shadow bg-gray-50";
@@ -586,4 +618,3 @@ if (userMenu) {
 
   }
 }); // end DOMContentLoaded
-
