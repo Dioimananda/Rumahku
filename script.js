@@ -461,7 +461,7 @@ if (!p.sellerWhatsapp) return "";
         <p class="text-sm text-gray-600 mb-1">${p.type}</p>
         
         <!-- Luas tanah & bangunan (sejajar) -->
-<div class="flex gap-4 text-sm text-gray-700 mt-1">
+<div class="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-gray-700 mt-1">
   <div class="flex items-center gap-1">
     🏡 <span>LT:</span> <b>${p.landSize} m²</b>
   </div>
@@ -471,7 +471,7 @@ if (!p.sellerWhatsapp) return "";
 </div>
 
 <!-- Informasi ruangan -->
-<div class="flex gap-4 text-sm text-gray-600 mt-1">
+<div class="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-gray-600 mt-1">
   <div>🛏️ ${p.bedroom} Kamar Tidur</div>
   <div>🚿 ${p.bathroom} Kamar Mandi</div>
 </div>
