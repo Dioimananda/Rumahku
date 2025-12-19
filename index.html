@@ -124,7 +124,7 @@
         <button id="add-toggle" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm sm:text-base">➕ Tambah</button>
         <button id="verify-toggle"
   class="bg-orange-500 text-white px-3 py-1 rounded hover:bg-orange-600 text-sm sm:text-base">
-  🔐 Verifikasi Akun
+  🔐 Verifikasi Akun & Upgrade
 </button>
 
 
@@ -135,12 +135,7 @@
           💬 Pesan CS
           <span id="chat-notif" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full px-1 hidden">0</span>
         </button>
-       
-        <button id="upgradeVerify-toggle" class="bg-orange-500 text-white px-3 py-1 rounded hover:bg-orange-600 text-sm sm:text-base">
-  🆙 Upgrade + Verifikasi Akun
-</button>
-
-    
+      
       </div>
     </header>
 
@@ -174,7 +169,20 @@
           <option value="Rumah">Rumah</option>
           <option value="Apartemen">Apartemen</option>
           <option value="Tanah">Tanah</option>
+          <option value="Kost">Kost</option>
+          <option value="Kontrakan">Kontrakan</option>
         </select>
+        <input type="text" id="newLandSize" placeholder="Luas Tanah (m²)" class="border p-2 rounded" required />
+        <input id="newBuildingSize" type="number" placeholder="Luas Bangunan (m²)" class="border p-2 rounded" required />
+        <input type="number" id="newBedroom" placeholder="Jumlah Kamar Tidur" class="border p-2 rounded" required />
+        <input type="number" id="newBathroom" placeholder="Jumlah Kamar Mandi" class="border p-2 rounded" required />
+        <input
+  type="text"
+  id="newWhatsapp"
+  placeholder="Nomor Aktif Penjual (ex 628xxxx)"
+  class="border p-2 rounded"
+/>
+
         <input type="text" id="newImage" placeholder="URL Gambar" class="border p-2 rounded" required />
         <button type="submit" class="bg-green-500 text-white py-2 rounded hover:bg-green-600 sm:col-span-2">Tambah Properti</button>
       </form>
@@ -192,6 +200,9 @@
     <input type="text" id="verify-fullname" placeholder="Nama Lengkap" class="border p-2 rounded" required />
 
     <input type="file" id="verify-file" class="border p-2 rounded bg-white" accept="image/*,.pdf" required />
+
+    <input type="hidden" id="verify-target-role" value="penjual">
+
 
     <button class="bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
       Kirim Permintaan Verifikasi
