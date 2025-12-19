@@ -64,9 +64,7 @@ const verifySection = document.getElementById("verify-section");
 
 const verifyToggle = document.getElementById("verify-toggle");
     if (verifyToggle) {
-        verifyToggle.addEventListener("click", () => {
-            verifySection.classList.toggle("hidden");
-        });
+      
     }
 
   const searchInput = document.getElementById('search');
@@ -100,6 +98,16 @@ const verifyToggle = document.getElementById("verify-toggle");
 
   // --- storage utilities ---
   function loadUsers() {
+
+  function loadVerifyRequests() {
+    return JSON.parse(localStorage.getItem("verifyRequests")) || [];
+}
+
+function saveVerifyRequests(data) {
+  localStorage.setItem("verifyRequests", JSON.stringify(data));
+}
+
+
     try {
       return JSON.parse(localStorage.getItem('users')) || [
         { username: 'Dio', password: '123', role: 'admin' },
@@ -122,8 +130,25 @@ const verifyToggle = document.getElementById("verify-toggle");
   function loadLocalProperties(){ return JSON.parse(localStorage.getItem('localProperties')) || []; }
   function saveLocalProperties(l){ localStorage.setItem('localProperties', JSON.stringify(l)); }
 
+  function loadVerifyRequests() {
+  return JSON.parse(localStorage.getItem("verifyRequests")) || [];
+}
+
+function saveVerifyRequests(data) {
+  localStorage.setItem("verifyRequests", JSON.stringify(data));
+}
+
+
   // helper: safe element toggles
   function hideAllPanels() {
+    if (verifyToggle) {
+  verifyToggle.addEventListener("click", () => {
+    const isOpen = !verifySection.classList.contains("hidden");
+    hideAllPanels();
+    if (!isOpen) verifySection.classList.remove("hidden");
+  });
+}
+
   hide(filterSection);
   hide(addSection);
   hide(chatSection);
@@ -227,6 +252,7 @@ function showApp(user) {
   if (userInfo) userInfo.textContent = '';
 
   // role controls
+  
   if (user.role === 'customer') {
     hide(addToggle); 
     hide(addSection);
@@ -271,6 +297,57 @@ else {
   updateUnreadCount();
 }
 
+const verifyForm = document.getElementById("verify-form");
+
+if (verifyForm) {
+  verifyForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    if (!currentUser) {
+      alert("Silakan login terlebih dahulu");
+      return;
+    }
+
+    const fullname = document.getElementById("verify-fullname").value.trim();
+    const fileInput = document.getElementById("verify-file");
+
+    if (!fullname || !fileInput.files.length) {
+      alert("Data belum lengkap");
+      return;
+    }
+
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const requests = loadVerifyRequests();
+
+      if (requests.some(r => r.username === currentUser.username && r.status === "pending")) {
+        alert("Permintaan verifikasi masih diproses");
+        return;
+      }
+
+      requests.push({
+        id: Date.now(),
+        username: currentUser.username,
+        fullname,
+        fileData: reader.result,
+        status: "pending",
+        createdAt: new Date().toLocaleString()
+      });
+
+      saveVerifyRequests(requests);
+      verifyForm.reset();
+      verifySection.classList.add("hidden");
+
+      alert("Permintaan verifikasi berhasil dikirim");
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+
 
   // --- PROPERTIES (load/render) ---
   async function loadProperties() {
@@ -284,7 +361,7 @@ else {
     renderProperties(properties);
   }
 
-  function renderProperties(list) {
+function renderProperties(list) {
     if (!propertyList) return;
     propertyList.innerHTML = '';
     if (!list || list.length === 0) {
@@ -366,13 +443,55 @@ document.getElementById("request-toggle").addEventListener("click", () => {
     list.forEach(p => {
       const card = document.createElement('div');
       card.className = 'bg-white shadow-md rounded-2xl p-4 hover:shadow-lg transition';
+      const waText = encodeURIComponent(
+  `Halo, apakah properti "${p.title}" masih tersedia?`
+);
+
+const waLink = p.sellerWhatsapp
+  ? `https://wa.me/${p.sellerWhatsapp}?text=${waText}`
+  : "";
+if (!p.sellerWhatsapp) return "";
+
+
       card.innerHTML = `
         <img src="${p.image}" alt="${p.title}" class="w-full h-40 object-cover rounded-xl mb-3" />
         <h3 class="text-lg font-semibold">${p.title}</h3>
-        <p class="text-sm text-gray-600">${p.location}</p>
         <p class="text-blue-600 font-bold mt-1">Rp ${Number(p.price).toLocaleString()}</p>
-        <p class="text-sm text-gray-500 mb-3">${p.type}</p>
-        <div class="flex gap-2">${userActionButtons(p)}</div>
+        <p class="text-sm text-gray-600">${p.location}</p>
+        <p class="text-sm text-gray-600 mb-1">${p.type}</p>
+        
+        <!-- Luas tanah & bangunan (sejajar) -->
+<div class="flex gap-4 text-sm text-gray-700 mt-1">
+  <div class="flex items-center gap-1">
+    🏡 <span>LT:</span> <b>${p.landSize} m²</b>
+  </div>
+  <div class="flex items-center gap-1">
+    🧱 <span>LB:</span> <b>${p.buildingSize} m²</b>
+  </div>
+</div>
+
+<!-- Informasi ruangan -->
+<div class="flex gap-4 text-sm text-gray-600 mt-1">
+  <div>🛏️ ${p.bedroom} Kamar Tidur</div>
+  <div>🚿 ${p.bathroom} Kamar Mandi</div>
+</div>
+
+  </p>
+        <div class="flex gap-2 flex-wrap mt-3">
+  ${userActionButtons(p)}
+
+  ${p.sellerWhatsapp ? `
+    <a
+  href="${waLink}"
+  target="_blank"
+  class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm flex items-center gap-1"
+>
+  💬 Hubungi Penjual
+</a>
+
+  ` : ""}
+</div>
+
       `;
       // attach handlers safely
       const editBtn = card.querySelector('.edit-btn');
@@ -411,9 +530,13 @@ document.getElementById("request-toggle").addEventListener("click", () => {
       const title = document.getElementById('newTitle')?.value || '';
       const location = document.getElementById('newLocation')?.value || '';
       const price = Number(document.getElementById('newPrice')?.value || 0);
+      const landSize = document.getElementById("newLandSize")?.value || "";
+      const buildingSize = document.getElementById("newBuildingSize")?.value || "";
+      const bedroom = document.getElementById("newBedroom")?.value || "";
+      const bathroom = document.getElementById("newBathroom")?.value || "";
       const type = document.getElementById('newType')?.value || '';
       const image = document.getElementById('newImage')?.value || '';
-      const newProp = { id: Date.now(), title, location, price, type, image };
+      const newProp = { id: Date.now(), title, location, price, landSize, buildingSize, bedroom, bathroom, type, image, sellerWhatsapp: document.getElementById("newWhatsapp").value.trim()};
       const saved = loadLocalProperties();
       saved.push(newProp);
       saveLocalProperties(saved);
@@ -459,7 +582,7 @@ document.getElementById("request-toggle").addEventListener("click", () => {
     requestToggle.addEventListener('click', () => {
       const isVisible = !requestSection.classList.contains('hidden');
       hideAllPanels();
-      if (!isVisible) { requestSection.classList.remove('hidden'); activePanel = 'request'; renderUpgradeRequests(); }
+      if (!isVisible) { requestSection.classList.remove('hidden'); activePanel = 'request'; renderVerifyRequestsForAdmin(); }
     });
   }
   if (chatToggle) {
@@ -485,6 +608,44 @@ document.getElementById("request-toggle").addEventListener("click", () => {
   }
 
   function renderUpgradeRequests() {
+  function renderVerifyRequestsForAdmin() {
+  if (!requestList) return;
+
+  const requests = loadVerifyRequests();
+  requestList.innerHTML = "";
+
+  if (!requests.length) {
+    requestList.innerHTML = "<p class='text-gray-500'>Tidak ada permintaan verifikasi</p>";
+    return;
+  }
+
+  requests.forEach((req, index) => {
+    const div = document.createElement("div");
+    div.className = "border p-3 rounded bg-gray-50";
+
+    div.innerHTML = `
+      <p><b>Username:</b> ${req.username}</p>
+      <p><b>Nama:</b> ${req.fullname}</p>
+      <img src="${req.fileData}" class="w-32 border my-2 rounded" />
+      <p><b>Status:</b> ${req.status}</p>
+
+      ${req.status === "pending" ? `
+        <div class="flex gap-2 mt-2">
+          <button class="approve bg-green-600 text-white px-3 py-1 rounded">Setujui</button>
+          <button class="reject bg-red-600 text-white px-3 py-1 rounded">Tolak</button>
+        </div>
+      ` : ""}
+    `;
+
+    if (req.status === "pending") {
+      div.querySelector(".approve").onclick = () => approveVerification(req.username, index);
+      div.querySelector(".reject").onclick = () => rejectVerification(index);
+    }
+
+    requestList.appendChild(div);
+  });
+}
+
     if (!requestList) return;
     const reqs = loadUpgradeRequests();
     requestList.innerHTML = '';
@@ -508,25 +669,22 @@ document.getElementById("request-toggle").addEventListener("click", () => {
     });
   }
 
-  function approveUpgrade(username) {
-        const users = loadUsers().map(u =>
-            u.username === username ? { ...u, role: "penjual" } : u
-        );
-        saveUsers(users);
+function approveVerification(username, index) {
+  // naikkan role user
+  const users = loadUsers().map(u =>
+    u.username === username ? { ...u, role: "penjual" } : u
+  );
+  saveUsers(users);
 
-        const reqs = loadUpgradeRequests().filter(r => r.username !== username);
-        saveUpgradeRequests(reqs);
+  // update status request
+  const requests = loadVerifyRequests();
+  requests[index].status = "approved";
+  saveVerifyRequests(requests);
 
-        alert(username + " disetujui menjadi penjual");
-        renderUpgradeRequests();
-    }
+  alert(username + " berhasil diverifikasi dan menjadi penjual");
+  renderVerifyRequestsForAdmin();
+}
 
-  function rejectUpgrade(username) {
-        const reqs = loadUpgradeRequests().filter(r => r.username !== username);
-        saveUpgradeRequests(reqs);
-        alert(username + " ditolak");
-        renderUpgradeRequests();
-    }
 
   // --- CHAT (basic messages + unread) ---
   function updateUnreadCount() {
@@ -593,6 +751,42 @@ document.getElementById("request-toggle").addEventListener("click", () => {
 
 const logoutBtn = document.getElementById('logoutBtn');
 
+const verifyForm = document.getElementById("verify-form");
+
+if (verifyForm) {
+  verifyForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const fullname = document.getElementById("verify-fullname").value;
+    const file = document.getElementById("verify-file").files[0];
+
+    if (!file) return alert("Silakan unggah file.");
+
+    const reader = new FileReader();
+
+    reader.onload = function () {
+      const requests = JSON.parse(localStorage.getItem("verifyRequests") || "[]");
+
+      requests.push({
+        username: currentUser.username,
+        fullname,
+        fileData: reader.result,
+        status: "pending",
+        targetRole: "penjual"
+      });
+
+      localStorage.setItem("verifyRequests", JSON.stringify(requests));
+
+      alert("Permintaan verifikasi berhasil dikirim.");
+      verifyForm.reset();
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+
+
 // --- USER MENU HOVER EFFECT ---
 const userMenu = document.getElementById("user-menu");
 const userLabel = document.getElementById("user-label");
@@ -615,6 +809,7 @@ if (userMenu) {
     });
 }
 
+console.log("verifyForm:", verifyForm);
 
   }
 }); // end DOMContentLoaded
