@@ -111,13 +111,13 @@ function saveVerifyRequests(data) {
     try {
       return JSON.parse(localStorage.getItem('users')) || [
         { username: 'Dio', password: '123', role: 'admin' },
-        { username: 'budi', password: '456', role: 'customer' },
+        { username: 'Budi', password: '456', role: 'customer' },
         { username: 'Farid', password: '789', role: 'penjual' }
       ];
     } catch (e) {
       return [
         { username: 'Dio', password: '123', role: 'admin' },
-        { username: 'budi', password: '456', role: 'customer' },
+        { username: 'Budi', password: '456', role: 'customer' },
         { username: 'Farid', password: '789', role: 'penjual' }
       ];
     }
